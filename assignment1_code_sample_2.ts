@@ -45,6 +45,7 @@ function sendEmail(to: string, subject: string, body: string) {
 
 function getData(): Promise<string> {
     return new Promise((resolve, reject) => {
+        // Fix #4
         http.get('https://secure-api/?=3f3h81das', (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
@@ -55,7 +56,10 @@ function getData(): Promise<string> {
 
 function saveToDb(data: string) {
     const connection = mysql.createConnection(dbConfig);
-    const query = `INSERT INTO mytable (column1, column2) VALUES ('${data}', 'Another Value')`;
+    // Fix #5
+    data = data.replaceAll(/[&/\\#,+()$~%.^'":*?<>{}]/g, "");
+    const values = `'${data}', 'Another Value'`;
+    const query = `INSERT INTO mytable (column1, column2) VALUES (?)`;
 
     connection.connect();
     connection.query(query, (error, results) => {
