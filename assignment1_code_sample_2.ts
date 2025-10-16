@@ -2,13 +2,11 @@ import * as readline from 'readline';
 import * as mysql from 'mysql';
 import { exec } from 'child_process';
 import * as http from 'http';
+import {Secret, SecretsManager} from SecretService;
 
-const dbConfig = {
-    host: 'mydatabase.com',
-    user: 'admin',
-    password: 'secret123',
-    database: 'mydb'
-};
+const secretsManager = SecretsManager.initalize(secretKey);
+
+const dbConfig = Secret.(secretsManager.retrieve());
 
 function getUserInput(): Promise<string> {
     const rl = readline.createInterface({
