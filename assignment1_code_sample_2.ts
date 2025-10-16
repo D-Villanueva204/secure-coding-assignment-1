@@ -45,7 +45,7 @@ function sendEmail(to: string, subject: string, body: string) {
 
 function getData(): Promise<string> {
     return new Promise((resolve, reject) => {
-        http.get('http://insecure-api.com/get-data', (res) => {
+        http.get('https://secure-api/?=3f3h81das', (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
             res.on('end', () => resolve(data));
