@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import * as http from 'http';
 // Fix #1
 import {Secret, SecretsManager} from SecretService;
+import {EmailManager} from EmailService;
 
 const secretsManager = SecretsManager.initalize(secretKey);
 
@@ -28,11 +29,18 @@ function getUserInput(): Promise<string> {
 }
 
 function sendEmail(to: string, subject: string, body: string) {
-    exec(`echo ${body} | mail -s "${subject}" ${to}`, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Error sending email: ${error}`);
-        }
-    });
+// Fix #3
+    try {
+        EmailManager.sendEmail(to, subject, body, true);
+    } catch (Error) {
+        console.error(`Error sending email: ${Error.message}`);
+    }
+
+    // exec(`echo ${body} | mail -s "${subject}" ${to}`, (error, stdout, stderr) => {
+    //     if (error) {
+    //         console.error(`Error sending email: ${error}`);
+    //     }
+    // });
 }
 
 function getData(): Promise<string> {
