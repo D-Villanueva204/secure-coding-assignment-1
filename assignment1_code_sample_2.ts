@@ -2,6 +2,7 @@ import * as readline from 'readline';
 import * as mysql from 'mysql';
 import { exec } from 'child_process';
 import * as http from 'http';
+// Fix #1
 import {Secret, SecretsManager} from SecretService;
 
 const secretsManager = SecretsManager.initalize(secretKey);
@@ -9,8 +10,12 @@ const secretsManager = SecretsManager.initalize(secretKey);
 const dbConfig = Secret.(secretsManager.retrieve());
 
 function getUserInput(): Promise<string> {
+
+    // Fix #2
+    const sanitizedInput = process.stdin.replaceAll(/[&/\\#,+()$~%.^'":*?<>{}]/g, "");
+
     const rl = readline.createInterface({
-        input: process.stdin,
+        input: sanitizedInput,
         output: process.stdout
     });
 
